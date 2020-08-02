@@ -1,0 +1,53 @@
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar" th:fragment="sidebar">
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu">
+        <li class="active treeview">
+            <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Master User</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <!-- <ul class="treeview-menu">
+                <li><a href="/customers/add"><i class="fa fa-circle-o"></i> Add User</a></li>
+            </ul> -->
+            <ul class="treeview-menu">
+                <li><a href="/user/1"><i class="fa fa-circle-o"></i> List User</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Master Data</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <!-- <ul class="treeview-menu">
+                <li><a href="/customers/add"><i class="fa fa-circle-o"></i> Add User</a></li>
+            </ul> -->
+            <ul class="treeview-menu">
+                <li><a href="/datalatih/LeafSmut/1"><i class="fa fa-circle-o"></i> List Data Latih</a></li>
+                <li><a href="/datatesting/LeafSmut/1"><i class="fa fa-circle-o"></i> List Data Testing</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Pengujian</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <!-- <ul class="treeview-menu">
+                <li><a href="/customers/add"><i class="fa fa-circle-o"></i> Add User</a></li>
+            </ul> -->
+            <ul class="treeview-menu">
+                <li><a href="/glcm"><i class="fa fa-circle-o"></i> Glcm</a></li>
+                <li><a href="/akurasi"><i class="fa fa-circle-o"></i> Akurasi</a></li>
+            </ul>
+        </li>
+    </ul>
+</section>
+<!-- /.sidebar -->

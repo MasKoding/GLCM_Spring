@@ -1,0 +1,77 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Data Testing</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Data Testing</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Data Latih</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Lists</h3>
+            <div class="box-tools pull-right">
+                <a href="/datatesting/add" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>
+                <br clear="all" />
+             
+            </div>
+        </div>
+        <div class="box-body no-padding">
+           <div class="row">
+                	<div class="col-md-8">
+                		<label class="col-md-4" style="margin-top:8px;"> Rice leaf disease :</label>
+                		<div class="col-md-8">
+                		<div th:with="someVariable=${#strings.arraySplit(#httpServletRequest.requestURI, '/')}">
+	                		<select name="penyakit" class="form-control" id="penyakit">
+	                			<option th:value="LeafSmut" th:selected="${someVariable[1] == 'LeafSmut'}">Leaf Smut</option>
+	                			<option th:value="BrownSpot" th:selected="${someVariable[1] == 'BrownSpot'}">BrownSpot</option>
+	                			<option th:value="BactericalLeafBlight" th:selected="${someVariable[1] == 'BactericalLeafBlight'}">Bacterical Leaf Blight</option>
+	                		</select>
+                		</div>
+                		</div>
+                		
+                	</div>
+                </div>
+               <br/>
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Image</th>
+                    <th>Contrast</th>
+                    <th>Homogenity</th>
+                    <th>Energy</th>
+                    <th>Action</th>
+                </tr>
+                <tr th:each="row,i : ${list}">
+                    <td th:text="${i.index +1}"></td>
+                    <td><img th:src="@{'/upload'+'/'}+${row.FileName}" width="100px"/></td>
+                    <td th:text="${row.Contrast}"></td>
+                    <td th:text="${row.Homogenity}"></td>
+                    <td th:text="${row.Energy}"></td>
+                    <td>
+                        <a th:href="${'/datalatih/edit/' + row.id}">Edit</a> |
+                        <a th:href="${'/datalatih/delete/' + row.id}">Delete</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a th:href="${#httpServletRequest.requestURI}">First</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${#strings.substring(#httpServletRequest.requestURI, 0, #strings.length(#httpServletRequest.requestURI)-1) + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${#httpServletRequest.requestURI + endIndex}">Last</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
