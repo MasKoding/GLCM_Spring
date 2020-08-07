@@ -73,7 +73,7 @@ public class DataLatihController {
 		
 	@RequestMapping(value = "/merge",method = RequestMethod.POST)
 	public String merge(DataLatih dataLatih,@RequestParam("file") MultipartFile[] files,RedirectAttributes ra) {
-
+		EkstraksiFiturService glcmfe;
 		String message = "";
 		try {
 		for (int i = 0; i < files.length; i++) {
@@ -100,10 +100,17 @@ public class DataLatihController {
 				
 				logger.info("Server File Location="
 						+ serverFile.getAbsolutePath());
-			
+				
+				glcmfe = new EkstraksiFiturService(new File(dir.getAbsolutePath()+"/"+files[i].getOriginalFilename()), 50);
+				glcmfe.extract();
+				dt.setContrast(glcmfe.getContrast());
+				dt.setDissimilarity(glcmfe.getDissimilarity());
+				dt.setHomogenity(glcmfe.getHomogenity());
+				dt.setEntropy(glcmfe.getEntropy());
+				dt.setEnergy(glcmfe.getEnergy());
 				dt.setFileName(folderName+"/"+files[i].getOriginalFilename());
 				dt.setGejala(dataLatih.getGejala());
-				dt.setNamaPenyakit(dataLatih.getNamaPenyakit());
+				dt.setNamaPenyakit(dataLatih.getNamaPenyakit().replace(" ", ""));
 				dt.setIsActive(true);
 				dt.setIsDeleted(false);
 				
@@ -116,7 +123,7 @@ public class DataLatihController {
 			e.printStackTrace();
 		}
 		
-		return "redirect:/datalatih/1";
+		return "redirect:/datalatih/"+dataLatih.getNamaPenyakit().replace(" ", "")+"/1";
 	}
 	@RequestMapping(value = "/delete/{id}",method = RequestMethod.GET)
 	public String delete(@PathVariable long id,RedirectAttributes ra) {
@@ -131,27 +138,27 @@ public class DataLatihController {
 		ra.addFlashAttribute("successFlash","Success delete data..");
 		return "redirect:/datalatih/1";
 	}
-	
-	@RequestMapping(value = "/ekstraksi",method=RequestMethod.GET)
+/**
+	@RequestMapping(value = "/ekstraksi", method = RequestMethod.GET)
 	public String ekstraksi() {
 		EkstraksiFiturService glcmfe;
 		ModelAndView mv = new ModelAndView();
 		try {
-			String rootDirectory=System.getProperty("user.dir");
-			String resourceDirectory=rootDirectory+"/src/main/resources/static";
-			File dir = new File(resourceDirectory  + "/upload");
+			String rootDirectory = System.getProperty("user.dir");
+			String resourceDirectory = rootDirectory + "/src/main/resources/static";
+			File dir = new File(resourceDirectory + "/upload");
 			if (!dir.exists())
 				dir.mkdirs();
 
 			// Create the file on server
 			List<DataLatih> getList = dataLatihService.getAll();
-			
-			
+
 			for (DataLatih dataLatih : getList) {
 				DataLatih dt = dataLatihService.findByFileName(dataLatih.getFileName());
-				
-				if(dt.getContrast().equals(null) || dt.getHomogenity().equals(null) || dt.getEnergy().equals(null)) {
-					glcmfe = new EkstraksiFiturService(new File(dir.getAbsolutePath()+"/"+dataLatih.getFileName()), 50);
+
+				if (dt.getContrast().equals(null) || dt.getHomogenity().equals(null) || dt.getEnergy().equals(null)) {
+					glcmfe = new EkstraksiFiturService(new File(dir.getAbsolutePath() + "/" + dataLatih.getFileName()),
+							50);
 					glcmfe.extract();
 					dt.setContrast(glcmfe.getContrast());
 					dt.setDissimilarity(glcmfe.getDissimilarity());
@@ -160,19 +167,17 @@ public class DataLatihController {
 					dt.setEnergy(glcmfe.getEnergy());
 					dt.setUpdateAt(new Date());
 					dt.setUpdatedBy("System");
-					dataLatihService.save(dt);	
+					dataLatihService.save(dt);
 				}
-				
+
 			}
-			
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Aut
+			 * o-generated catch block
 			e.printStackTrace();
 		}
 		return "redirect:/datalatih/1";
-	}
-
-	
+	}**/	
 
 }

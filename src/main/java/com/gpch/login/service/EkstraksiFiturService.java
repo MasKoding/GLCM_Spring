@@ -1,6 +1,7 @@
 package com.gpch.login.service;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,21 +9,48 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class EkstraksiFiturService {
+	// deklarasi  variabel image menggunakan bufferedImage
 	private BufferedImage image;
+	//deklarasi nilai gray level matriks dalam matriks
 	private int[][] grayLeveledMatrix;
+	// deklarasi nilai gray level
 	private int grayLevel;
+//	deklarasi  ekstraksi fitur
 	private double contrast;
 	private double homogenity;
 	private double entropy;
 	private double energy;
 	private double dissimilarity;
-
+//	ini untuk mengatur ukuran lebar dan tinngi pikselnya
+	private int scaledHeight = 140;
+	private int scaledWidth = 140;
+	//method ini dijalankan pertama kali ketika class digunakan dengan 2 param yaitu gambar dan nilai gray level
 	public EkstraksiFiturService(File image, int grayLevel) throws IOException {
-		this.image = ImageIO.read(image);
-		this.grayLevel = grayLevel;
-		grayLeveledMatrix = new int[this.image.getWidth()][this.image.getHeight()];
+		//inisialisasi nilai buffered image dengan membaca image dari lokasi path 
+		BufferedImage inputImage = ImageIO.read(image);
+		 
+	        // creates output image
+	        BufferedImage outputImage = new BufferedImage(this.scaledWidth,
+	                this.scaledHeight, inputImage.getType());
+	 
+	        // scales the input image to the output image
+	        Graphics2D g2d = outputImage.createGraphics();
+	        g2d.drawImage(inputImage, 0, 0, this.scaledWidth, this.scaledHeight, null);
+	        g2d.dispose();
+	 
+	        // extracts extension of output file
+	        String formatName = image.getAbsolutePath().substring(image.getAbsolutePath()
+	                .lastIndexOf(".") + 1);
+	 
+	        // writes to output file
+	        ImageIO.write(outputImage, formatName, new File(image.getAbsolutePath()));
+	        //set nilai image dan graylevel berdasarkan perubahan diatas
+			this.image = ImageIO.read(image);
+			this.grayLevel = grayLevel;
+			grayLeveledMatrix = new int[this.image.getWidth()][this.image.getHeight()];
 	}
 	
+	//method ini merupakan proses ekstraksi GLCM
 	public void extract() {
 		this.createGrayLeveledMatrix();
 		
@@ -49,7 +77,7 @@ public class EkstraksiFiturService {
 		this.dissimilarity = (double) (calcDissimilarity(cm0SN) + calcDissimilarity(cm45SN) + calcDissimilarity(cm90SN) + calcDissimilarity(cm135SN)) / 4;
 		
 	}
-	
+	//untuk membuat gray level matriks
 	private void createGrayLeveledMatrix() {
 		for (int i = 0; i < image.getWidth(); i++) {
 			for (int j = 0; j < image.getHeight(); j++) {
@@ -68,7 +96,7 @@ public class EkstraksiFiturService {
 			}
 		}
 	}
-	
+//	method ini untuk membuat matriks co occurence berdasarkan 4 sudut
 	private int[][] createCoOccuranceMatrix(int angle) { //distance = 1
 		int[][] temp = new int[grayLevel+1][grayLevel+1];
 		int startRow = 0;
@@ -124,7 +152,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method untuk melakukan transpose matriks
 	private int[][] transposeMatrix(int [][] m){
 		int[][] temp = new int[m[0].length][m.length];
 		for (int i = 0; i < m.length; i++){
@@ -145,6 +173,7 @@ public class EkstraksiFiturService {
 		return temp;
 	}
 	
+// untuk mendapatkan nilai total dari matriks
 	private int getTotal(int [][] m){
 		int temp = 0;
 		for (int i = 0; i < m.length; i++){
@@ -154,7 +183,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini untuk melakukan normalisasi matriks
 	private double[][] normalizeMatrix(int [][] m){
 		double[][] temp = new double[m[0].length][m.length];
 		int total = getTotal(m);
@@ -165,7 +194,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini digunakan untuk calculasi nilai contrast dari matriks yang telah dibuat
 	private double calcContrast(double[][] matrix) {
 		double temp = 0;
 		for (int i = 0; i < matrix.length; i++) {
@@ -175,7 +204,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini digunakan untuk calculasi nilai homogenity dari matriks yang telah dibuat	
 	private double calcHomogenity(double[][] matrix) {
 		double temp = 0;
 		for (int i = 0; i < matrix.length; i++) {
@@ -185,7 +214,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini digunakan untuk calculasi nilai entropy dari matriks yang telah dibuat
 	private double calcEntropy(double[][] matrix) {
 		double temp = 0;
 		for (int i = 0; i < matrix.length; i++) {
@@ -197,7 +226,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini digunakan untuk calculasi nilai energy dari matriks yang telah dibuat
 	private double calcEnergy(double[][] matrix) {
 		double temp = 0;
 		for (int i = 0; i < matrix.length; i++) {
@@ -207,7 +236,7 @@ public class EkstraksiFiturService {
 		}
 		return temp;
 	}
-	
+//	method ini digunakan untuk calculasi nilai dissimilarity dari matriks yang telah dibuat
 	private double calcDissimilarity(double[][] matrix) {
 		double temp = 0;
 		for (int i = 0; i < matrix.length; i++) {
@@ -218,6 +247,7 @@ public class EkstraksiFiturService {
 		return temp;
 	}
 
+//	getter 
 	public double getContrast() {
 		return contrast;
 	}

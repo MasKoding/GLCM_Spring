@@ -28,7 +28,7 @@
                 		<label class="col-md-4" style="margin-top:8px;"> Rice leaf disease :</label>
                 		<div class="col-md-8">
                 		<div th:with="someVariable=${#strings.arraySplit(#httpServletRequest.requestURI, '/')}">
-	                		<select name="penyakit" class="form-control" id="penyakit">
+	                		<select name="penyakit" class="form-control" id="penyakit" onchange="selectDiseaseDataTesting()">
 	                			<option th:value="LeafSmut" th:selected="${someVariable[1] == 'LeafSmut'}">Leaf Smut</option>
 	                			<option th:value="BrownSpot" th:selected="${someVariable[1] == 'BrownSpot'}">BrownSpot</option>
 	                			<option th:value="BactericalLeafBlight" th:selected="${someVariable[1] == 'BactericalLeafBlight'}">Bacterical Leaf Blight</option>
@@ -55,19 +55,19 @@
                     <td th:text="${row.Homogenity}"></td>
                     <td th:text="${row.Energy}"></td>
                     <td>
-                        <a th:href="${'/datalatih/edit/' + row.id}">Edit</a> |
-                        <a th:href="${'/datalatih/delete/' + row.id}">Delete</a>
+                    <!--  <a th:href="${'/datalatih/edit/' + row.id}">Edit</a> | -->
+                        <a href="#" th:attr="onclick=|confirmDeleteDataTesting('${row.id}')|" >Delete</a>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="box-footer clearfix">
             <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a th:href="${#httpServletRequest.requestURI}">First</a></li>
+                <li><a th:href="${#strings.substring(#httpServletRequest.requestURI,0,#strings.length(#httpServletRequest.requestURI)-1)+beginIndex}">First</a></li>
                 <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
                     <a th:href="${#strings.substring(#httpServletRequest.requestURI, 0, #strings.length(#httpServletRequest.requestURI)-1) + p}" th:text="${p}"></a>
                 </li>
-                <li><a th:href="${#httpServletRequest.requestURI + endIndex}">Last</a></li>
+                <li><a th:href="${#strings.substring(#httpServletRequest.requestURI,0,#strings.length(#httpServletRequest.requestURI)-1)+endIndex}">Last</a></li>
             </ul>
         </div>
     </div>

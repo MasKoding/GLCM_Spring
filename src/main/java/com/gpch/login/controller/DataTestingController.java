@@ -74,7 +74,7 @@ public class DataTestingController {
 		
 	@RequestMapping(value = "/merge",method = RequestMethod.POST)
 	public String merge(DataTesting dataTesting,@RequestParam("file") MultipartFile[] files,RedirectAttributes ra) {
-
+		EkstraksiFiturService glcmfe;
 		String message = "";
 		try {
 		for (int i = 0; i < files.length; i++) {
@@ -102,9 +102,17 @@ public class DataTestingController {
 				logger.info("Server File Location="
 						+ serverFile.getAbsolutePath());
 			
+				glcmfe = new EkstraksiFiturService(new File(dir.getAbsolutePath()+"/"+files[i].getOriginalFilename()), 50);
+				glcmfe.extract();
+				dt.setContrast(glcmfe.getContrast());
+				dt.setDissimilarity(glcmfe.getDissimilarity());
+				dt.setHomogenity(glcmfe.getHomogenity());
+				dt.setEntropy(glcmfe.getEntropy());
+				dt.setEnergy(glcmfe.getEnergy());
 				dt.setFileName(folderName+"/"+files[i].getOriginalFilename());
 				dt.setGejala(dataTesting.getGejala());
-				dt.setNamaPenyakit(dataTesting.getNamaPenyakit());
+				dt.setNamaPenyakit(dataTesting.getNamaPenyakit().replace(" ", ""));
+
 				dt.setIsActive(true);
 				dt.setIsDeleted(false);
 				
@@ -117,7 +125,7 @@ public class DataTestingController {
 			e.printStackTrace();
 		}
 		
-		return "redirect:/datatesting/1";
+		return "redirect:/datatesting/"+dataTesting.getNamaPenyakit().replace(" ", "")+"/1";
 	}
 	@RequestMapping(value = "/ekstraksi",method=RequestMethod.GET)
 	public String ekstraksi() {

@@ -2,6 +2,7 @@ package com.gpch.login.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,5 @@ public interface DataLatihRepository extends JpaRepository<DataLatih, Long>{
 		
 		@Query(nativeQuery = true,value = "SELECT * FROM data_latih where file_name=:file_name")
 		DataLatih getByFileName(@Param("file_name") String file_name);
+		
 }

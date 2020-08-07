@@ -1,6 +1,7 @@
 package com.gpch.login.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gpch.login.model.DataLatih;
 import com.gpch.login.model.Ekstraksi;
 import com.gpch.login.repository.EkstraksiRepository;
+import com.gpch.login.request.EkstraksiModel;
 
 @Service("EkstraksiService")
 public class EkstraksiService {
@@ -21,7 +23,11 @@ public class EkstraksiService {
     public Ekstraksi findById(long id) {
     	return ekstraksiRepo.findById(id);
     }
-    
+
+    public List<Map<String,Object>> getResult(Double contrast){
+    	return ekstraksiRepo.getResultExtraction(contrast);
+    	
+    }
 
     public Ekstraksi findByFileName(String fileName) {
     	return ekstraksiRepo.getByFileName(fileName);
